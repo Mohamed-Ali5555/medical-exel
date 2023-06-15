@@ -22,6 +22,12 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
         Route::post('login', 'LoginController@submit');
         Route::get('logout', 'LoginController@logout')->name('logout');
 
+
+
+
+
+
+        
         Route::get('forgot-password', 'ForgotPasswordController@forgot_password')->name('forgot-password');
         Route::post('forgot-password', 'ForgotPasswordController@reset_password_request');
         Route::get('otp-verification', 'ForgotPasswordController@otp_verification')->name('otp-verification');
@@ -52,8 +58,20 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
             //Route::get('select-new', 'ProductController@select_new')->name('select-new');
             Route::post('duplicate', 'ProductController@duplicate')->name('duplicate');
             Route::post('status-update', 'ProductController@status_update')->name('status-update');
+
+
             Route::get('list', 'ProductController@list')->name('list');
             Route::get('adminlist', 'ProductController@adminlist')->name('adminlist');
+
+            Route::get('autosearch','ProductController@autosearch')->name('autoSearch');
+
+            // Route::get('category/{category}/','ProductController@productCategory')->name('category');
+
+
+            // Route::get('products', 'ProductController@productCategory')->name('category');
+
+
+
             Route::get('stock-limit-list/{type}', 'ProductController@stock_limit_list')->name('stock-limit-list');
             Route::get('get-variations', 'ProductController@get_variations')->name('get-variations');
             Route::post('update-quantity', 'ProductController@update_quantity')->name('update-quantity');
@@ -260,3 +278,6 @@ Route::group(['namespace' => 'Seller', 'prefix' => 'seller', 'as' => 'seller.'],
     });
 
 });
+Route::get('/goverment/{id}',[\App\Http\Controllers\Seller\Auth\RegisterController::class,'getproducts']);  //the error in route this dont put it in middleware
+
+

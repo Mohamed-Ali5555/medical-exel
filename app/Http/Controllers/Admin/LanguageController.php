@@ -188,11 +188,50 @@ class LanguageController extends Controller
         return back();
     }
 
-    public function translate($lang)
+    public function translate(Request $request,string $lang)
     {
+
+
+        // $lang = $request->input('lang');
+        $searchTerm = $request->input('search');
         $full_data = include(base_path('resources/lang/' . $lang . '/messages.php'));
+
+        // $full_data = include(base_path('resources/lang/' . $lang . '/messages.php'));
         ksort($full_data);
-        return view('admin-views.business-settings.language.translate', compact('lang', 'full_data'));
+
+        $searchResults = [];
+
+        // Perform the search on the $full_data array
+        foreach ($full_data as $key => $value) {
+            if (strpos($key, $searchTerm) !== false || strpos($value, $searchTerm) !== false) {
+                $searchResults[$key] = $value;
+            }
+        }
+
+        return view('admin-views.business-settings.language.translate', compact('lang', 'searchResults', 'full_data'));
+
+
+        // $searchKey = $request->input('search', '');
+
+        // $full_data = [];
+        // $langFilePath = resource_path('lang/' . $lang . '/messages.php');
+        // if (file_exists($langFilePath)) {
+        //     $full_data = include($langFilePath);
+        // }
+    
+        // $searchResults = [];
+        // foreach ($full_data as $key => $value) {
+        //     if (str_contains(strtolower($key), strtolower($searchKey))) {
+        //         $searchResults[$key] = $value;
+        //     }
+        // }
+    
+        // ksort($searchResults);
+//////////////////////////////////////////
+/////////////////////////////////////////
+        // $full_data = include(base_path('resources/lang/' . $lang . '/messages.php'));
+        // ksort($full_data);
+        // return view('admin-views.business-settings.language.translate', compact('lang','searchResults', 'full_data'));
     }
 
     public function translate_key_remove(Request $request, $lang)
@@ -205,6 +244,8 @@ class LanguageController extends Controller
 
     public function translate_submit(Request $request, $lang)
     {
+
+        return $request->all();
         $full_data = include(base_path('resources/lang/' . $lang . '/messages.php'));
         $data_filtered = [];
         foreach ($full_data as $key => $data) {

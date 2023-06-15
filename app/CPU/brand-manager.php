@@ -20,4 +20,13 @@ class BrandManager
     public static function get_active_brands(){
         return Brand::active()->withCount('brandProducts')->latest()->get();
     }
+    // if (!function_exists('limit_words')) {
+        // function limit_words($string, $limit) {
+        //     $words = explode(' ', $string);
+        //     $limitedWords = array_slice($words, 0, $limit);
+        //     $limitedString = implode(' ', $limitedWords);
+        //     return $limitedString;
+        // }
+    // }
+
 }

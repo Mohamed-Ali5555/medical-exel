@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\CPU\Helpers;
 use Illuminate\Support\Facades\Session;
 use function App\CPU\translate;
+use App\Model\goverment;
 
 class RegisterController extends Controller
 {
@@ -24,13 +25,16 @@ class RegisterController extends Controller
             Toastr::warning(translate('access_denied!!'));
             return redirect('/');
         }
-        return view('seller-views.auth.register');
+
+        $goverments  = goverment::where('status',1)->get();
+
+        return view('seller-views.auth.register',compact('goverments'));
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
-            'image'         => 'required|mimes: jpg,jpeg,png,gif',
+            // 'image'         => 'required|mimes: jpg,jpeg,png,gif',
             'logo'          => 'required|mimes: jpg,jpeg,png,gif',
             'banner'        => 'required|mimes: jpg,jpeg,png,gif',
             'email'         => 'required|unique:sellers',
@@ -39,6 +43,12 @@ class RegisterController extends Controller
             'l_name'        => 'required',
             'shop_name'     => 'required',
             'phone'         => 'required',
+            'address'         => 'required',
+            'option'         => 'required',
+
+            'goverment_id'         => 'required',
+            'city'         => 'required',
+
             'password'      => 'required|min:8',
         ]);
 
@@ -76,6 +86,13 @@ class RegisterController extends Controller
             $seller->f_name = $request->f_name;
             $seller->l_name = $request->l_name;
             $seller->phone = $request->phone;
+            $seller->address = $request->address;
+
+            $seller->city = $request->city;
+            $seller->goverment_id = $request->goverment_id;
+            $seller->option = $request->option;
+
+
             $seller->email = $request->email;
             $seller->image = ImageManager::upload('seller/', 'png', $request->file('image'));
             $seller->password = bcrypt($request->password);
@@ -114,5 +131,19 @@ class RegisterController extends Controller
         }
 
 
+    }
+
+
+
+
+
+    
+    public function getproducts($id)
+    {
+        // dd( $id);
+
+        $citys = DB::table('city')->where('status',1)->where('goverment_id',$id)->pluck('name','id');//section_id = id =>that is come from rote when you pres on it and pluck product_name with id 
+        return json_encode($citys);
+        // return $citys;
     }
 }

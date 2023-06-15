@@ -60,4 +60,61 @@ class Category extends Model
             }]);
         });
     }
+
+
+    
+    // public function products(){
+
+
+    //     return $this->hasMany('App\Model\Product','category_ids','id');
+
+    //     // $data = Product::select('category_ids');
+    //     // $productsData = json_decode($data, true); // Convert JSON string to an associative array
+
+    //     // $productIds = array_column($productsData, 'id'); // Get an array of product IDs
+
+    //     // $products = Product::whereIn('id', $productIds)->get();
+
+
+    // }
+    // public function products()
+    // {
+    //     return $this->hasMany('App\Model\Product', 'category_ids', 'id')->with('decodeCategoryIds');
+    // }
+    
+    // public function decodeCategoryIds()
+    // {
+    //     return $this->hasMany('App\Model\Product')->select(\DB::raw("JSON_UNQUOTE(JSON_EXTRACT(category_ids, '$[*].id')) as category_ids"));
+    // }
+    // public function products()
+    // {
+    //     return $this->hasMany(Product::class,'category_ids');
+    // }
+
+
+
+    public function getCategoryIdsAttribute()
+    {
+        $categoryIds = collect(json_decode($this->category_ids, true));
+
+        return $categoryIds->pluck('id')->toArray();
+    }
+    // public function products()
+    // {
+    //     return Product::whereJsonContains('category_ids', [['id' => $this->id]])->get();
+    // }
+    public function subcategories()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+    // public function products(){
+    //     return $this->hasMany('App\Model\Product','category_ids','id')
+    //                 ->where('id', 'id')
+    //                 ->where('position', 1);
+    // }
+
 }

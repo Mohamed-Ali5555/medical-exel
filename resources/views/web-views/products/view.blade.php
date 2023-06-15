@@ -270,7 +270,7 @@
                         <i class="tio-filter"></i>
                     </div>
                     <h1 class="max-sm-order-1">
-                        <label id="price-filter-count"> {{$products->total()}} {{\App\CPU\translate('items found')}} </label>
+                        <label id="price-filter-count"> {{$products->count()}} {{\App\CPU\translate('items found')}} </label>
                     </h1>
                     <div class="d-flex align-items-center ml-auto">
 

@@ -28,6 +28,7 @@ use App\Model\Subscription;
 use App\Model\ShippingMethod;
 use App\Model\Shop;
 use App\Model\Order;
+
 use App\Model\Transaction;
 use App\Model\Translation;
 use App\Traits\CommonTrait;
@@ -50,6 +51,8 @@ use App\CPU\Convert;
 class WebController extends Controller
 {
     use CommonTrait;
+
+   
     public function maintenance_mode()
     {
         $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
@@ -127,11 +130,11 @@ class WebController extends Controller
 
 
 
-    $latest_products = Product::with(['reviews'])
-    ->active()->where('added_by','admin')
-    ->orderBy('id', 'desc')
-    ->take(8)
-    ->get();
+    // $latest_products = Product::with(['reviews'])
+    // ->active()->where('added_by','admin')
+    // ->orderBy('id', 'desc')
+    // ->take(8)
+    // ->get();
     // return $latest_products;
         // $products12 = Product::whereNull('parent_id')->with('lowest_price_child')->get();
       
@@ -142,7 +145,7 @@ class WebController extends Controller
 
 
         $products12 = Product::with(['reviews'])
-    ->active()
+    ->active()->where('featured', 1)
     ->where('added_by', 'admin')
     ->orderBy('id', 'desc')
     ->whereNull('parent_id')
@@ -151,174 +154,17 @@ class WebController extends Controller
         ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
             $join->on('products.parent_id', '=', 'subquery.parent_id')
                  ->on('products.discount', '=', 'subquery.max_discount');
-        })
+        })->groupBy('products.parent_id')
         ->get();
     
     }])
-    ->paginate(12);
+    ->paginate(200);
 
-//         foreach ($products12 as $product) {
-
-//             $children = $product->children;
-//             foreach ($children as $child) {
-//                 // Access the discount of each child
-//                 if($product->id == $child->parent_id){
-//                     return $child->discount;
-//                 }else{
-//                     return 'no';
-//                 }
-//             //   return  $product->id;
-//                 // Do something with the discount
-//             }
-        
-// // return $products12->lowest_price_child;
-//         }
-    // $products1 = DB::table('products')
-    // ->select('products.*')
-    // ->join(DB::raw('(SELECT parent_id, MIN(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
-    //     $join->on('products.parent_id', '=', 'subquery.parent_id')
-    //          ->on('products.discount', '=', 'subquery.max_discount');
-    // })
-    // ->get();
-
+    // return $products12;
 
 
     
-//     foreach ($products as $product) {
-//         // Access product attributes
-//         $productId = $product->id;
-//         $productName = $product->name;
-    
-//         // Access children products with highest discount
-//      return   $children = $product->children;
-//          $children->first();
-//         if ($children->isNotEmpty()) {
-//                   $childProduct = $children;
-//            return $childProductId = $childProduct->id;
-//             $childProductName = $childProduct->name;
-//             $childProductDiscount = $childProduct->discount;
-//             // ...
-//         }
-//     }
-// return $products;
 
-    //     $productName = 'Your Product Name';
-    //     $products = Product::where('name', $productName)
-    // ->orderBy('discount', 'desc')
-    // ->get();
-
-// Step 3: Get the product(s) with the highest price
-// foreach ($products1 as $product1){
-
-// $same_product = Product::where('parent_id', $product1->lowest_price_child->parent_id)->get();
-// // return $same_product;
-
-// }
-// $highestPriceProducts = $products12->where('parent_id',)->where('discount', $products12->max('discount'));
-
-        // foreach($products as $product) {
-            // return $highestPriceProducts;
-        //    $lowest_price_child = $product->lowest_price_child;
-        // }
-//         return $lowest_price_child;
-//         foreach ($products12 as $parent_id => $products) {
-//             return  $products;
-//             foreach ($products as $product) {
-        
-//     $sellerProducts = Product::whereNotNull('parent_id')->where('parent_id',$parent_id )->get();
- 
-// }
-//    }
-// return $products12;
-    // $products12 = Product::whereNull('parent_id')->with('lowest_price_child')->paginate(12);
-    
-    // foreach($products12 as $product) {
-    //  return     $lowest_price_child = $product->lowest_price_child->discount;
-    // }
-//   $products;
-
-
-//     $adminProducts = Product::whereNotNull('parent_id')->get();
-
-//     $adminProducts = Product::whereNull('parent_id')->get();
-
-// // Step 2: Retrieve the child products added by the seller
-// $sellerProducts = Product::whereNotNull('parent_id')->get();
-
-// // Step 3: Group the seller products by parent_id
-// $sellerProductsGrouped = $sellerProducts->groupBy('parent_id');
-//     $result = [];
-
-    // foreach ($adminProducts as $adminProduct) {
-    //     // Check if there are seller products associated with the admin product
-    //     if ($sellerProductsGrouped->has($adminProduct->id)) {
-    //         // Get the seller products for the admin product
-    //         $sellerProductsForAdmin = $sellerProductsGrouped[$adminProduct->id];
-    
-    //         // Add the admin product along with the price from the first seller product to the result
-    //         $result[] = [
-    //             'id' => $adminProduct->id,
-    //             'name' => $adminProduct->name,
-    //             'price' => $sellerProductsForAdmin->first()->price,
-    //         ];
-    //     } else {
-    //         // If no seller products are associated, add the admin product without a price
-    //         $result[] = [
-    //             'id' => $adminProduct->id,
-    //             'name' => $adminProduct->name,
-    //             'price' => null,
-    //         ];
-    //     }
-    // }
-    
-    // return $result;
-//        foreach ($latest_products as $info) {
-// // return $info;
-//          $products12 = Product::where('parent_id',$info->id)->get();
-//            }
-//        return $sellerProduct;
-// $all_products = []; // Initialize an empty array to store all products
-
-// foreach ($latest_products as $last) {
-//     $products = Product::groupBy('name')
-//         ->where('parent_id', $last->id)
-//         ->select('*', \DB::raw('MAX(discount) AS max_discount'))
-//         ->get();
-
-//     $all_products = array_merge($all_products, $products->toArray());
-// }
-
-// Now $all_products contains all the products from each iteration
-// You can do further processing or return the result as needed
-// return $all_products;
-
-
-    // foreach($latest_products as $last){
-    //     // return $last;
-    //     $products = Product::groupBy('name')->where('parent_id',$last->id)
-    //     ->select('id','name','discount', \DB::raw('MAX(discount) AS discount'))
-    //     ->get();
-
-    //     // $products =Product::select('name')->distinct()->orderBy('discount', 'desc')->pluck('name')->all();
-
-    // }
-    
-
-    // return $products;
-//     $products = Product::where('name', $product->name)->all();
-// $highestDiscount = $products->max('discount');
-// return $highestDiscount;
-// Apply the highest discount to the products
-
-// $maxPrice = Product::whereIn('name', $products->pluck('name'))
-//     ->get();
-//     foreach($products as $product){
-// return $product->discount;
-//     }
-// $products =    Product::select('name')->distinct()->orderBy('discount', 'desc')->pluck('name')->all();
-// ;
-
- 
     // return $products->all();
     // $high_discount = Product::max('')
     /////////////////////////////
@@ -346,7 +192,7 @@ class WebController extends Controller
             ->get();
 
         if ($bestSellProduct->count() == 0) {
-            $bestSellProduct = $latest_products;
+            $bestSellProduct = $products12;
         }
 
         if ($topRated->count() == 0) {
@@ -356,7 +202,7 @@ class WebController extends Controller
         $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select('deal_of_the_days.*', 'products.unit_price')->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
 
         return view('web-views.home',
-                    compact('featured_products', 'products12','topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories', 'brand_setting')
+                    compact('featured_products', 'products12','topRated', 'bestSellProduct', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories', 'brand_setting')
                 );
     }
 
@@ -393,6 +239,7 @@ class WebController extends Controller
 
     public function search_shop(Request $request)
     {
+        // return 'g';
         $key = explode(' ', $request['shop_name']);
         $sellers = Shop::where(function ($q) use ($key) {
             foreach ($key as $value) {
@@ -723,6 +570,8 @@ class WebController extends Controller
 
     public function seller_shop(Request $request, $id)
     {
+
+
         $business_mode=Helpers::get_business_settings('business_mode');
 
         $active_seller = Seller::approved()->find($id);
@@ -757,9 +606,10 @@ class WebController extends Controller
             $total_order = $seller->orders->where('seller_is','seller')->where('order_type','default_type')->count();
         }
 
-
+ 
         //finding category ids
-        $products = Product::whereIn('id', $product_ids)->paginate(12);
+        $products = Product::whereIn('id', $product_ids)->paginate(8);
+      $all_products_count = Product::whereIn('id', $product_ids)->count();
 
         $category_info = [];
         foreach ($products as $product) {
@@ -810,7 +660,7 @@ class WebController extends Controller
                 $query->whereJsonContains('category_ids', [
                     ['id' => strval($request->category_id)],
                 ]);
-            })->paginate(12);
+            })->paginate(8);
 
         if ($id == 0) {
             $shop = [
@@ -824,7 +674,6 @@ class WebController extends Controller
                 return back();
             }
         }
-
         $current_date = date('Y-m-d');
         $seller_vacation_start_date = $id != 0 ? date('Y-m-d', strtotime($shop->vacation_start_date)) : null;
         $seller_vacation_end_date = $id != 0 ? date('Y-m-d', strtotime($shop->vacation_end_date)) : null;
@@ -838,7 +687,19 @@ class WebController extends Controller
         $inhouse_vacation_status = $id == 0 ? $inhouse_vacation['status'] : false;
         $inhouse_temporary_close = $id == 0 ? $temporary_close['status'] : false;
 
-        return view('web-views.shop-page', compact('products', 'shop', 'categories','current_date','seller_vacation_start_date','seller_vacation_status',
+      
+          // testing more products when i scroll
+            
+        if ($request->ajax()) {
+            $view = view('web-views.products._ajax-products',compact('products','all_products_count'))->render();
+            return response()->json(['html'=>$view]);
+        }
+        // end testing ////
+
+      
+      
+      
+        return view('web-views.shop-page', compact('products', 'shop', 'categories','all_products_count','current_date','seller_vacation_start_date','seller_vacation_status',
             'seller_vacation_end_date','seller_temporary_close','inhouse_vacation_start_date','inhouse_vacation_end_date','inhouse_vacation_status','inhouse_temporary_close'))
             ->with('seller_id', $id)
             ->with('total_review', $total_review)
@@ -905,28 +766,28 @@ class WebController extends Controller
 
         $sellers_products = Product::where("parent_id",$product->id)->with('children')->orderBy("discount", 'desc')->get();
         
-        
+        // return $product;
 
 // return $sellers_products;
 // testng code 
 
 
 
-$products12 = Product::
+// $products12 = Product::where('featured', 1)->
 
-whereNull('parent_id')
-->with(['children' => function ($query) {
-    $query->select('products.*')
-    ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
-        $join->on('products.parent_id', '=', 'subquery.parent_id')
-             ->on('products.discount', '=', 'subquery.max_discount');
-    })
-    ->get();
+// whereNull('parent_id')
+// ->with(['children' => function ($query) {
+//     $query->select('products.*')
+//     ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
+//         $join->on('products.parent_id', '=', 'subquery.parent_id')
+//              ->on('products.discount', '=', 'subquery.max_discount');
+//     })
+//     ->get();
 
-}])
-->paginate(12);
+// }])
+// ->paginate(12);
 // end testing code
-
+// return $sellers_products ;
         if ($product != null) {
             $countOrder = OrderDetail::where('product_id', $product->id)->count();
             //$countWishlist = Wishlist::where('product_id', $product->id)->count();
@@ -955,7 +816,6 @@ whereNull('parent_id')
 
     public function products(Request $request)
     {
-        
         $request['sort_by'] == null ? $request['sort_by'] == 'latest' : $request['sort_by'];
 
         $porduct_data = Product::active()->where('added_by','admin')->with(['reviews'])
@@ -965,17 +825,69 @@ whereNull('parent_id')
         ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
             $join->on('products.parent_id', '=', 'subquery.parent_id')
                  ->on('products.discount', '=', 'subquery.max_discount');
-        })
+        })->groupBy('products.parent_id')
         ->get();
     
     }]) ;
-    //      $porduct_data = Product::active()
-    // ->where('added_by', 'admin')
-    // ->whereNull('parent_id')
-    // ->with(['reviews'])
-    // ->orderBy('discount', 'desc')
-    // ->first();
+    //     $porduct_data = Product::active()->where('added_by','admin')->with(['reviews'])
+    //     ->whereNull('parent_id')
+    // ->with(['children' => function ($query) {
+    //     $query->select('products.*')
+    //     ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
+    //         $join->on('products.parent_id', '=', 'subquery.parent_id')
+    //              ->on('products.discount', '=', 'subquery.max_discount');
+    //     })
+    //     ->get();
+    
+    // }]) ;
 
+//    return  $porduct_data ;
+
+
+    //      $porduct_data = Product::active()
+    // ->where('added_by', 'seller')
+    // ->where( function ($query) {
+    //         $query->select('products.*')
+    //         ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
+    //             $join->on('products.parent_id', '=', 'subquery.parent_id')
+    //                 ;
+    //         })->get();
+    //     });
+    // $max_discount = Product::where('added_by', 'seller')
+    // ->max('discount');
+    
+    //     $porduct_dataس = Product::where('added_by', 'seller')
+    // ->where(function ($query) {
+    //     $query->select('products.*')
+    //         ->join(DB::raw('(SELECT parent_id, MIN(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
+    //             $join->on('products.parent_id', '=', 'subquery.parent_id')
+    //                 ->on('products.discount', '=', 'subquery.max_discount');
+    //         }) ->value('discount');
+    // })
+    // ;
+    // $porduct_data = Product::with(['reviews'])
+    // ->active()
+    // ->where('added_by', 'seller')
+    // ->orderBy('id', 'desc')
+    // ->whereNull('parent_id')
+    // ->where(function ($query) {
+    //     $query->where('discount', function ($subquery) {
+    //         $subquery->select(DB::raw('MAX(discount)'))
+    //             ->from('products')
+    //             ->whereRaw('products.parent_id = products.id');
+    //     });
+    // })
+    // ->value('discount')->latest();
+
+// return $porduct_data;
+
+    
+
+// $porduct_data = Product::where('added_by', 'seller')
+//     ->where('discount', $max_discount)->latest()
+//     ;
+    // }]) ;
+// return $porduct_data;
     // $porduct_data = Product::active()
     // ->where('added_by', 'admin')
     // ->with(['reviews'])
@@ -1068,7 +980,8 @@ whereNull('parent_id')
                         $query->where('tag', 'like', "%{$value}%");
                     });
                 }
-            })->pluck('id');
+            })  
+            ->pluck('id');
 
             if($product_ids->count()==0)
             {
@@ -1104,12 +1017,14 @@ whereNull('parent_id')
             $fetched = $query->orderBy('name', 'DESC');
         } else {
             $fetched = $query->latest();
+            // $fetched = $query->paginate(12);
+
         }
 
         if ($request['min_price'] != null || $request['max_price'] != null) {
             $fetched = $fetched->whereBetween('unit_price', [Helpers::convert_currency_to_usd($request['min_price']), Helpers::convert_currency_to_usd($request['max_price'])]);
         }
-
+// return $query;
         $data = [
             'id' => $request['id'],
             'name' => $request['name'],
@@ -1119,16 +1034,18 @@ whereNull('parent_id')
             'min_price' => $request['min_price'],
             'max_price' => $request['max_price'],
         ];
-
-        $products = $fetched->paginate(20)->appends($data);
+// return $products;
+        $products = $fetched->get();
 
         if ($request->ajax()) {
 
             return response()->json([
-                'total_product'=>$products->total(),
+                'total_product'=>$products->count(),
                 'view' => view('web-views.products._ajax-products', compact('products'))->render()
             ], 200);
-        }
+        }  
+        
+
         if ($request['data_from'] == 'category') {
             $data['brand_name'] = Category::find((int)$request['id'])->name;
         }

@@ -127,7 +127,7 @@
                                                                     href="{{route('products',['data_from'=>'featured','page'=>1])}}">{{\App\CPU\translate('featured_products')}}</a>
                                     </li>
                                     <li class="widget-list-item"><a class="widget-list-link"
-                                                                    href="{{route('products',['data_from'=>'latest','page'=>1])}}">{{\App\CPU\translate('latest_products')}}</a>
+                                                                    href="{{route('products',['data_from'=>'latest','page'=>1])}}">{{\App\CPU\translate('bestt_products')}}</a>
                                     </li>
                                     <li class="widget-list-item"><a class="widget-list-link"
                                                                     href="{{route('products',['data_from'=>'best-selling','page'=>1])}}">{{\App\CPU\translate('best_selling_product')}}</a>

@@ -104,13 +104,13 @@ class ProductController extends BaseController
         // }
 
         $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        if ($brand_setting && empty($request->brand_id)) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
-                );
-            });
-        }
+        // if ($brand_setting && empty($request->brand_id)) {
+        //     $validator->after(function ($validator) {
+        //         $validator->errors()->add(
+        //             'brand_id', 'Brand is required!'
+        //         );
+        //     });
+        // }
 
         if ($request['discount_type'] == 'percent') {
             $dis = ($request['unit_price'] / 100) * $request['discount'];
@@ -640,14 +640,14 @@ class ProductController extends BaseController
             'purchase_price'        => 'required|numeric|gt:0',
             'discount'              => 'required|gt:-1',
             'shipping_cost'         => 'required_if:product_type,==,physical|gt:-1',
-            'code'                  => 'required|numeric|min:1|digits_between:6,20|unique:products,code,'.$product->id,
+            // 'code'                  => 'required|numeric|min:1|digits_between:6,20|unique:products,code,'.$product->id,
             'minimum_order_qty'     => 'required|numeric|min:1',
         ], [
             'name.required'                     => 'Product name is required!',
             'category_id.required'              => 'category  is required!',
             'unit.required_if'                  => 'Unit  is required!',
-            'code.min'                          => 'Code must be positive!',
-            'code.digits_between'               => 'Code must be minimum 6 digits!',
+            // 'code.min'                          => 'Code must be positive!',
+            // 'code.digits_between'               => 'Code must be minimum 6 digits!',
             'minimum_order_qty.required'        => 'Minimum order quantity is required!',
             'minimum_order_qty.min'             => 'Minimum order quantity must be positive!',
             'digital_file_ready.mimes'          => 'Ready product upload must be a file of type: pdf, zip, jpg, jpeg, png, gif.',

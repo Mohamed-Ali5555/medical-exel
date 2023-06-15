@@ -108,7 +108,7 @@
 
 <div class="modal-header rtl">
     <div>
-    {{-- pppppp{{$product->discount}}xxxxxxxx --}}
+        {{-- pppppp{{$product->discount}}xxxxxxxx --}}
         <h4 class="modal-title product-title">
             <a class="product-title2" href="{{ route('product', $product->slug) }}" data-toggle="tooltip"
                 data-placement="right" title="Go to product page">{{ $product['name'] }}
@@ -129,89 +129,25 @@
         <div class="col-lg-6 col-md-6">
             <div class="cz-product-gallery">
                 <div class="cz-preview">
-                    @if ($product->images != null && json_decode($product->images) > 0)
-                        @if (json_decode($product->colors) && $product->color_image)
-                            @foreach (json_decode($product->color_image) as $key => $photo)
-                                @if ($photo->color != null)
+                      
                                     <div
-                                        class="cz-preview-item d-flex align-items-center justify-content-center  {{ $key == 0 ? 'active' : '' }}">
+                                        class=" d-flex align-items-center justify-content-center">
                                         <img class="show-imag img-responsive" style="max-height: 500px!important;"
-                                            onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                            src="{{ asset("storage/app/public/product/$photo->image_name") }}"
+                                           
+                                             src="{{ asset("storage/app/public/product/thumbnail/$product->thumbnail") }}"
                                             alt="Product image" width="">
                                     </div>
-                                @else
-                                    <div
-                                        class="cz-preview-item d-flex align-items-center justify-content-center  {{ $key == 0 ? 'active' : '' }}">
-                                        <img class="show-imag img-responsive" style="max-height: 500px!important;"
-                                            onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                            src="{{ asset("storage/app/public/product/$photo->image_name") }}"
-                                            alt="Product image" width="">
-                                    </div>
-                                @endif
-                            @endforeach
-                        @else
-                            @foreach (json_decode($product->images) as $key => $photo)
-                                <div
-                                    class="cz-preview-item d-flex align-items-center justify-content-center  {{ $key == 0 ? 'active' : '' }}">
-                                    <img class="show-imag img-responsive" style="max-height: 500px!important;"
-                                        onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                        src="{{ asset("storage/app/public/product/$photo") }}" alt="Product image"
-                                        width="">
-                                </div>
-                            @endforeach
-                        @endif
-                    @endif
+
+                    
                 </div>
-                <div class="table-responsive" style="max-height: 515px;">
-                    <div class="d-flex">
-                        @if ($product->images != null && json_decode($product->images) > 0)
-                            @if (json_decode($product->colors) && $product->color_image)
-                                @foreach (json_decode($product->color_image) as $key => $photo)
-                                    @if ($photo->color != null)
-                                        <div class="cz-thumblist">
-                                            <a href="javascript:"
-                                                class=" cz-thumblist-item d-flex align-items-center justify-content-center">
-                                                <img class="click-img" id="preview-img{{ $photo->color }}"
-                                                    src="{{ asset("storage/app/public/product/$photo->image_name") }}"
-                                                    onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                    alt="Product thumb">
-                                            </a>
-                                        </div>
-                                    @else
-                                        <div class="cz-thumblist">
-                                            <a href="javascript:"
-                                                class=" cz-thumblist-item d-flex align-items-center justify-content-center">
-                                                <img class="click-img" id="preview-img{{ $key }}"
-                                                    src="{{ asset("storage/app/public/product/$photo->image_name") }}"
-                                                    onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                    alt="Product thumb">
-                                            </a>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @else
-                                @foreach (json_decode($product->images) as $key => $photo)
-                                    <div class="cz-thumblist">
-                                        <a href="javascript:"
-                                            class=" cz-thumblist-item d-flex align-items-center justify-content-center">
-                                            <img class="click-img" id="preview-img{{ $key }}"
-                                                src="{{ asset("storage/app/public/product/$photo") }}"
-                                                onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                alt="Product thumb">
-                                        </a>
-                                    </div>
-                                @endforeach
-                            @endif
-                        @endif
-                    </div>
-                </div>
+               
             </div>
         </div>
         <!-- Product details-->
         <div class="col-lg-6 col-md-6">
             <div class="details __h-100">
-                <a href="{{ route('product', $product->slug) }}" class="h3 mb-2 product-title">{{ $product->name }}</a>
+                <a href="{{ route('product', $product->slug) }}"
+                    class="h3 mb-2 product-title">{{ $product->name }}</a>
                 <div class="d-flex flex-wrap align-items-center mb-2 pro">
                     <div class="d-flex flex-wrap align-items-center">
                         <span

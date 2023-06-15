@@ -33,10 +33,10 @@
                             </a>
                         </div>
                     </div>
-                    <div class="single-product-details">
+                   <div class="single-product-details">
                         <div class="text-{{ Session::get('direction') === 'rtl' ? 'right pr-3' : 'left pl-3' }}">
-                            <a href="{{ route('product', $product->slug) }}">
-                                {{ Str::limit($product['name'], 23) }}
+                            <a href="{{ route('product', $product1->slug) }}">
+                                {{ Str::limit(trans($product['name']), 23) }}
                             </a>
                         </div>
 

@@ -139,7 +139,10 @@ class Product extends Model
         if (strpos(url()->current(), '/admin') || strpos(url()->current(), '/seller')) {
             return $name;
         }
-        return $this->translations[0]->value ?? $name;
+
+        $translation = $this->translations->where('key','name')->first();
+        // return $this->trans($name);
+        return optional($translation)->value ?: $name;
     }
 
     public function getDetailsAttribute($detail)

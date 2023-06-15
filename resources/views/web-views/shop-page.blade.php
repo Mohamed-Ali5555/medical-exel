@@ -389,12 +389,194 @@
                 <div class="row" id="ajax-products">
                     @include('web-views.products._ajax-products',['products'=>$products,'decimal_point_settings'=>$decimal_point_settings])
                 </div>
+
+
+                {{-- <div class="ajax-load text-center" style="display:none;">
+                    <p>
+                        <img class="size-60" src="{{ asset('public/assets/front-end/img/loader_.gif') }}"
+                            alt="">
+
+                            loading more products
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+               <div class="ajax-load text-center" style="display:none;">
+                    <p>
+                        <img class="size-60" src="{{ asset('public/assets/front-end/img/loader_.gif') }}"
+                            alt="">
+
+                            loading more products
+                    </p>
+                </div>
+              <a href="#" class="btn btn-info loadmore">{{__('load more')}}</a>
+            </div>
+        </div>
+    </div>
+@endsection
+{{-- للللللللللللللللل --}}
+                 {{-- <div class="ajax-load text-center" style="display:none;">
+                    <p>
+                        <img class="size-60" src="{{ asset('public/assets/front-end/img/loader_.gif') }}"
+                            alt="">
+
+                            loading more products
+                    </p>
+                </div>
+              <a href="#" class="btn btn-info loadmore">{{__('load more')}}</a>
             </div>
         </div>
     </div>
 @endsection
 
 @push('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  loading = false;
+  
+function loadMoreData(page) {
+   loading = true;
+  	 $('.loadmore').hide();
+    $.ajax({
+        url: '?page=' + page,
+        type: 'get',
+        beforeSend: function() {
+            $(".ajax-load").show();
+       } 
+    })
+    .done(function(data) {
+      loading = false;
+        if (data.html === "") {
+            $('.ajax-load').html("No more records found");
+          $('.loadmore').remove();
+            return;
+        }
+        $('.ajax-load').hide();
+         $("#ajax-products").append(data.html);
+      	 $('.loadmore').show();
+     
+    })
+    .fail(function(jqXHR, ajaxOptions, thrownError) {
+        alert("Server not responding...");
+    });
+}
+  var page = 1;
+$(document).on('click','.loadmore',function(){
+  if(page < {{$all_products_count}} && !loading){
+           page++;
+       	 loadMoreData(page);
+       }else{
+         $('.loadmore').remove();
+       }
+return false;
+});
+
+$(window).on('scroll', function() {
+    if ($(window).scrollTop() + $(window).height() >= $(document).height() ) {
+      
+       
+    }
+});
+</script> --}}
+
+
+{{-- لالالالالالالالالالالالالالا --}}
+@push('script')
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+{{-- <script>
+
+function loadMoreData(page){
+    $.ajax({
+        url:'?page=' + page,
+        type:'get',
+        beforeSend:function(){
+            $(".ajax-load").show();
+        }
+    })
+    .done(function(data){
+        if(data.html == " "){
+                   
+
+            $('.ajax-load').html("No more records found");
+            return;
+        }
+        $('.ajax-load').hide();
+        $("#ajax-products").append(data.html);
+    })
+    .fail(function(jqXHR,ajaxOptions,thrownError){
+        alert("server not responding...");
+    });
+}
+
+   var page = 1;
+    $(window).on('scroll touchmove', function () {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+            page++;
+            loadMoreData(page);
+        }
+    });
+</script> --}}
+
+
+<script>
+  loading = false;
+  
+function loadMoreData(page) {
+   loading = true;
+  	 $('.loadmore').hide();
+    $.ajax({
+        url: '?page=' + page,
+        type: 'get',
+        beforeSend: function() {
+            $(".ajax-load").show();
+       } 
+    })
+    .done(function(data) {
+      loading = false;
+        if (data.html === "") {
+            $('.ajax-load').html("No more records found");
+          $('.loadmore').remove();
+            return;
+        }
+        $('.ajax-load').hide();
+         $("#ajax-products").append(data.html);
+      	 $('.loadmore').show();
+     
+    })
+    .fail(function(jqXHR, ajaxOptions, thrownError) {
+        alert("Server not responding...");
+    });
+}
+  var page = 1;
+$(document).on('click','.loadmore',function(){
+  if(page < {{$all_products_count}} && !loading){
+           page++;
+       	 loadMoreData(page);
+       }else{
+         $('.loadmore').remove();
+       }
+return false;
+});
+
+$(window).on('scroll', function() {
+    if ($(window).scrollTop() + $(window).height() >= $(document).height() ) {
+      
+       
+    }
+});
+</script> 
+
+
+
+
+
+
+
+
     <script>
         function productSearch(seller_id, category_id) {
             $.ajaxSetup({
@@ -458,3 +640,4 @@
         });
     </script>
 @endpush
+

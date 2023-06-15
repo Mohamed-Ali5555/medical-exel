@@ -128,7 +128,7 @@
                                             <select
                                                 class="js-example-basic-multiple js-states js-example-responsive form-control"
                                                 name="brand_id" required>
-                                                <option value="{{ null }}" selected disabled>
+                                                <option value="{{ null }}" selected >
                                                     ---{{ \App\CPU\translate('Select') }}---</option>
                                                 @foreach ($br as $b)
                                                     <option value="{{ $b['id'] }}">{{ $b['name'] }}</option>

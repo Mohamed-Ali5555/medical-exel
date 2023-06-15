@@ -10,6 +10,9 @@ use App\Model\BusinessSetting;
 use App\Model\PhoneOrEmailVerification;
 use App\Model\Wishlist;
 use App\User;
+use App\Model\job;
+use App\CPU\ImageManager;
+
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,13 +31,18 @@ class RegisterController extends Controller
     public function register()
     {
         session()->put('keep_return_url', url()->previous());
-        return view('customer-view.auth.register');
+        $jobs = job::get();
+        return view('customer-view.auth.register',compact('jobs'));
     }
 
     public function submit(Request $request)
     {
         $request->validate([
             'f_name' => 'required',
+            'address' => 'required',
+            'job_as_id' => 'required',
+            'image'         => 'required|mimes: jpg,jpeg,png,gif',
+
             'email' => 'required|email|unique:users',
             'phone' => 'unique:users',
             'password' => 'required|min:8|same:con_password'
@@ -67,12 +75,32 @@ class RegisterController extends Controller
                 return back()->withErrors(\App\CPU\translate('Captcha Failed'));
             }
         }
+        // $customer = new User();
+        // $customer->f_name = $request->f_name;
+        // $customer->l_name = $request->l_name;
+        // $customer->email = $request->email;
+        // $customer->phone = $request->phone;
+
+        // $customer->job_id = $request->job_id;
+        // $customer->address = $request->address;
+        // $seller->password = bcrypt($request->password);
+        // $seller->is_active = 1;
+
+
+        // $seller->image = ImageManager::upload('customer/', 'png', $request->file('image'));
+
+
+
 
         $user = User::create([
             'f_name' => $request['f_name'],
             'l_name' => $request['l_name'],
             'email' => $request['email'],
             'phone' => $request['phone'],
+            'job_as_id' => $request['job_as_id'],
+            'image' => ImageManager::upload('customer/', 'png', $request->file('image')),
+
+            'address'=> $request['address'],
             'is_active' => 1,
             'password' => bcrypt($request['password'])
         ]);

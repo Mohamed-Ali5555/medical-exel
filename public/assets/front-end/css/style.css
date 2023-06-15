@@ -5555,3 +5555,15 @@ a {
     align-items: center;
 }
 /* cookie settings css end */
+
+
+[type="radio"] {
+    /* border: 0; */
+    /* clip: rect(0 0 0 0); */
+    height: 15px;
+    /* margin: -1px; */
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 15px;
+}

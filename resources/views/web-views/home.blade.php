@@ -1,5 +1,3 @@
-
-
 @extends('layouts.front-end.app')
 
 @section('title', $web_config['name']->value . ' ' . \App\CPU\translate('Online Shopping') . ' | ' .
@@ -300,13 +298,14 @@
                 <div class="mt-sm-3 mb-3 brand-slider">
                     <div class="owl-carousel owl-theme p-2" id="brands-slider">
                         @foreach ($brands as $brand)
-                            <div class="text-center">
+                            <div class="text-center col-md-1">
                                 <a href="{{ route('products', ['id' => $brand['id'], 'data_from' => 'brand', 'page' => 1]) }}"
                                     class="__brand-item">
                                     <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                         src="{{ asset("storage/app/public/brand/$brand->image") }}"
                                         alt="{{ $brand->name }}">
                                 </a>
+                                <p style="font-size: 12px;">{{$brand->name}}</p>
                             </div>
                         @endforeach
                     </div>
@@ -314,35 +313,7 @@
             </section>
         @endif
 
-        <!-- Products grid (featured products)-->
-        @if ($featured_products->count() > 0)
-            <div class="container mb-4">
-                <div class="row __inline-62">
-                    <div class="col-md-12">
-                        <div class="feature-product-title">
-                            {{ \App\CPU\translate('featured_products') }}
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="feature-product">
-                            <div class="carousel-wrap p-1">
-                                <div class="owl-carousel owl-theme " id="featured_products_list">
-                                    @foreach ($featured_products as $product)
-                                        <div>
-                                            @include('web-views.partials._feature-product', [
-                                                'product' => $product,
-                                                'decimal_point_settings' => $decimal_point_settings,
-                                            ])
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
+   
         {{-- featured deal --}}
         @php(
     $featured_deals = \App\Model\FlashDeal::with([
@@ -519,7 +490,7 @@
                         <div class="d-flex justify-content-between">
                             <div class="text-center">
                                 <span
-                                    class="for-feature-title __text-22px font-bold text-center">{{ \App\CPU\translate('latest_products') }}</span>
+                                    class="for-feature-title __text-22px font-bold text-center">{{ \App\CPU\translate('best_offers') }}</span>
                             </div>
                             <div class="mr-1">
                                 <a class="text-capitalize view-all-text"
@@ -575,144 +546,6 @@
             </div>
         @endif
 
-        @php($business_mode = \App\CPU\Helpers::get_business_settings('business_mode'))
-        {{-- categries --}}
-        <div class="container rtl">
-            <div class="row">
-                @if ($business_mode == 'multi')
-                    <div class="col-md-6">
-                        <div class="card __shadow h-100">
-                            <div class="card-body">
-                                <div class="row d-flex justify-content-between">
-                                    <div class="categories-title">
-                                        <span class="font-semibold">{{ \App\CPU\translate('categories') }}</span>
-                                    </div>
-                                    <div class="categories-view-all">
-                                        <a class="text-capitalize view-all-text"
-                                            href="{{ route('categories') }}">{{ \App\CPU\translate('view_all') }}
-                                            <i
-                                                class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1 float-left' : 'right ml-1 mr-n1' }}"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    @foreach ($categories as $key => $category)
-                                        @if ($key < 10)
-                                            <div class="text-center __m-5px __cate-item">
-                                                <a
-                                                    href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">
-                                                    <div class="__img">
-                                                        <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                            src="{{ asset("storage/app/public/category/$category->icon") }}"
-                                                            alt="{{ $category->name }}">
-                                                    </div>
-                                                    <p class="text-center small mt-2">
-                                                        {{ Str::limit($category->name, 12) }}</p>
-                                                </a>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <div class="col-md-12">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="row d-flex justify-content-between">
-                                    <div
-                                        style="{{ Session::get('direction') === 'rtl' ? 'margin-right: 20px;' : 'margin-left: 22px;' }}">
-                                        <span class="font-semibold">{{ \App\CPU\translate('categories') }}</span>
-                                    </div>
-                                    <div
-                                        style="{{ Session::get('direction') === 'rtl' ? 'margin-left: 15px;' : 'margin-right: 13px;' }}">
-                                        <a class="text-capitalize view-all-text"
-                                            href="{{ route('categories') }}">{{ \App\CPU\translate('view_all') }}
-                                            <i
-                                                class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1 float-left' : 'right ml-1 mr-n1' }}"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    @foreach ($categories as $key => $category)
-                                        @if ($key < 11)
-                                            <div class="text-center __m-5px __cate-item">
-                                                <a
-                                                    href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">
-                                                    <div class="__img">
-                                                        <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                            src="{{ asset("storage/app/public/category/$category->icon") }}"
-                                                            alt="{{ $category->name }}">
-                                                        <p class="text-center small mt-1">
-                                                            {{ Str::limit($category->name, 12) }}</p>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                <!-- top sellers -->
-
-                @if ($business_mode == 'multi')
-                    @if (count($top_sellers) > 0)
-                        <div class="col-md-6 mt-2 mt-md-0 seller-card">
-                            <div class="card __shadow h-100">
-                                <div class="card-body">
-                                    <div class="row d-flex justify-content-between">
-                                        <div class="seller-list-title">
-                                            <span class="font-semibold">{{ \App\CPU\translate('sellers') }}</span>
-                                        </div>
-                                        <div class="seller-list-view-all">
-                                            <a class="text-capitalize view-all-text"
-                                                href="{{ route('sellers') }}">{{ \App\CPU\translate('view_all') }}
-                                                <i
-                                                    class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1 float-left' : 'right ml-1 mr-n1' }}"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
-                                        @foreach ($top_sellers as $key => $seller)
-                                            @if ($key < 10)
-                                                @if ($seller->shop)
-                                                    <div class="__m-5px __cate-item">
-                                                        <a href="{{ route('shopView', ['id' => $seller['id']]) }}">
-                                                            <div class="__img circle position-relative">
-                                                                @php($shop = $seller->shop)
-                                                                @php($current_date = date('Y-m-d'))
-                                                                @php($start_date = date('Y-m-d', strtotime($shop['vacation_start_date'])))
-                                                                @php($end_date = date('Y-m-d', strtotime($shop['vacation_end_date'])))
-                                                                @if ($shop->vacation_status && $current_date >= $start_date && $current_date <= $end_date)
-                                                                    <span class="temporary-closed">
-                                                                        <small>{{ \App\CPU\translate('closed_now') }}</small>
-                                                                    </span>
-                                                                @elseif($shop->temporary_close)
-                                                                    <span class="temporary-closed">
-                                                                        <small>{{ \App\CPU\translate('closed_now') }}</small>
-                                                                    </span>
-                                                                @endif
-                                                                <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                                    src="{{ asset('storage/app/public/shop') }}/{{ $seller->shop->image }}">
-                                                            </div>
-                                                            <p class="text-center small mt-2">
-                                                                {{ Str::limit($seller->shop->name, 14) }}</p>
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @endif
-            </div>
-        </div>
 
 
 
@@ -733,68 +566,7 @@
             </div>
         </div>
         {{-- Categorized product --}}
-        @foreach ($home_categories as $category)
-            <section class="container rtl pb-4">
-                <!-- Heading-->
-                <div class="__p-20px rounded bg-white">
-                    <div class="flex-wrap __gap-6px flex-between pl-xl-4">
-                        <div class="category-product-view-title">
-                            <span
-                                class="for-feature-title {{ Session::get('direction') === 'rtl' ? 'float-right' : 'float-left' }} font-bold __text-20px text-uppercase"
-                                style="{{ Session::get('direction') === 'rtl' ? 'text-align:right;' : 'text-align:left;' }}">
-                                {{ Str::limit($category['name'], 18) }}
-                            </span>
-                        </div>
-                        <div class="category-product-view-all">
-                            <a class="text-capitalize view-all-text "
-                                href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ \App\CPU\translate('view_all') }}
-                                <i
-                                    class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left mr-1 ml-n1 mt-1 float-left' : 'right ml-1 mr-n1' }}"></i>
-                            </a>
-
-                        </div>
-                    </div>
-
-                    <div class="row mt-2 justify-content-between g-3">
-                        <div class="col-md-3 col-12">
-                            <a href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}"
-                                class="cursor-pointer d-block h-100 __cate-product-side-img">
-                                <img class="h-100"
-                                    onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                    src="{{ asset('storage/app/public/category') }}/{{ $category['icon'] }}">
-                            </a>
-                        </div>
-                        <div class="col-md-9 col-12 ">
-                            <div class="row g-2">
-                                @foreach ($category['products'] as $key => $product)
-                                    @if ($product->children != null)
-                                        @foreach ($product->children as $product1)
-                                            @if ($product1->parent_id === $product->id)
-                                                @if ($key < 4)
-                                                    <div class="col-md-3 col-sm-4 col-6">
-                                                        @include(
-                                                            'web-views.partials._category-single-product',
-                                                            [
-                                                                'product1' => $product1,
-                                                                'product' => $product,
-                                                                'decimal_point_settings' => $decimal_point_settings,
-                                                            ]
-                                                        )
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </section>
-        @endforeach
-
+      
         {{-- delivery type --}}
 
         <div class="container rtl pb-4 pt-3">

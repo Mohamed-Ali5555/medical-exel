@@ -118,14 +118,14 @@ class ProductController extends Controller
             });
         }
 
-        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        if ($brand_setting && empty($request->brand_id)) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
-                );
-            });
-        }
+        // $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+        // if ($brand_setting && empty($request->brand_id)) {
+        //     $validator->after(function ($validator) {
+        //         $validator->errors()->add(
+        //             'brand_id', 'Brand is required!'
+        //         );
+        //     });
+        // }
 
         if ($request['discount_type'] == 'percent') {
             $dis = ($request['unit_price'] / 100) * $request['discount'];
@@ -364,7 +364,6 @@ class ProductController extends Controller
     }
 
     public function duplicate(Request $request){  
-
         $current_product_count = Product::where(['added_by' => 'seller', 'parent_id' => $request->id ,'user_id' => auth('seller')->id()])->count();
         
         if($current_product_count > 0){
@@ -386,6 +385,23 @@ class ProductController extends Controller
         }
         
     }
+
+
+    // //////////////////////////////////
+    public function autoSearch(Request $request)
+    {
+        $query = $request->get('term', '');
+    
+
+        $products = Product::where('added_by', 'admin')->where('name', 'LIKE', '%' . $query . '%')->get();
+  
+
+    return response()->json(['products' => $products]);
+
+    }
+    // /////////////////////////////////////
+
+
 
     function list(Request $request)
     {
@@ -425,7 +441,42 @@ class ProductController extends Controller
         }
         $products = $products->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
-        return view('seller-views.product.adminlist', compact('products', 'search'));
+        // $categories = Category::get();
+        // $categories=Category::with(['childes.childes'])->where('position', 0)->priority()->paginate(11);
+
+
+        //$categories = Category::with(['products'])->where('slug', $slug)->first();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //return $request->all();
+        $category = $request->query('category_id', 0);
+        $keyword = $request->query('search', false);
+        $categories = Category::where('position',0)->latest()->get();
+
+        $seller = auth('seller')->user();
+
+        $key = explode(' ', $keyword);
+        $products = Product::where(['added_by' => 'admin'])
+            ->where('status',1)
+            ->when($request->has('category_id') && $request['category_id'] != 0, function ($query) use ($request) {
+                $query->whereJsonContains('category_ids', [['id' => (string)$request['category_id']]]);
+            })
+            ->when($keyword, function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()->paginate(Helpers::pagination_limit());
+
+
+
+   
+
+        // $products = Product::where(['status' => '1', 'category_ids' => $categories->id])->paginate(12);
+            
+
+        return view('seller-views.product.adminlist', compact('products', 'search','keyword','category','categories'));
     }
 
     public function stock_limit_list(Request $request, $type)
@@ -615,7 +666,7 @@ class ProductController extends Controller
             'tax'                   => 'required|min:0',
             'tax_model'             => 'required',
             'unit_price'            => 'required|numeric|gt:0',
-            'purchase_price'        => 'required|numeric|gt:0',
+            // 'purchase_price'        => 'required|numeric|gt:0',
             'discount'              => 'required|gt:-1',
             'shipping_cost'         => 'required_if:product_type,==,physical|gt:-1',
             'code'                  => 'required|numeric|min:1|digits_between:6,20|unique:products,code,'.$product->id,
@@ -633,14 +684,14 @@ class ProductController extends Controller
             'shipping_cost.required_if'         => 'Shipping Cost is required!',
         ]);
 
-        $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
-        if ($brand_setting && empty($request->brand_id)) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'brand_id', 'Brand is required!'
-                );
-            });
-        }
+        // $brand_setting = BusinessSetting::where('type', 'product_brand')->first()->value;
+        // if ($brand_setting && empty($request->brand_id)) {
+        //     $validator->after(function ($validator) {
+        //         $validator->errors()->add(
+        //             'brand_id', 'Brand is required!'
+        //         );
+        //     });
+        // }
 
         if ($request['discount_type'] == 'percent') {
             $dis = ($request['unit_price'] / 100) * $request['discount'];
@@ -1109,4 +1160,185 @@ class ProductController extends Controller
         return view('seller-views.product.barcode', compact('product', 'limit'));
     }
 
+
+
+
+
+
+
+
+// /////////////////////////
+
+//     // product category
+//     public function productCategory(Request $request,Category $category)
+//     {
+
+//         $request['sort_by'] == null ? $request['sort_by'] == 'latest' : $request['sort_by'];
+
+
+//         $query_param = [];
+//         $search = $request['search'];
+//         if ($request->has('search')) {
+//             $key = explode(' ', $request['search']);
+//             $products = Product::where(['added_by' => 'admin'])
+//                 ->where(function ($q) use ($key) {
+//                     foreach ($key as $value) {
+//                         $q->Where('name', 'like', "%{$value}%");
+//                     }
+//                 });
+//             $query_param = ['search' => $request['search']];
+//         } else {
+//             $products = Product::where(['added_by' => 'admin']);
+//         }
+
+
+
+//         $porduct_data = Product::active()->where('added_by','admin')->with(['reviews'])
+//         ->whereNull('parent_id')
+//     ->with(['children' => function ($query) {
+//         $query->select('products.*')
+//         ->join(DB::raw('(SELECT parent_id, MAX(discount) AS max_discount FROM products GROUP BY parent_id) AS subquery'), function ($join) {
+//             $join->on('products.parent_id', '=', 'subquery.parent_id')
+//                  ->on('products.discount', '=', 'subquery.max_discount');
+//         })->groupBy('products.parent_id')
+//         ->get();
+    
+//     }]) ;
+
+
+ 
+
+//         // return $porduct_data;
+
+//         if ($request['data_from'] == 'category') {
+//             $products = $porduct_data->get();
+//             $product_ids = [];
+//             foreach ($products as $product) { 
+                 
+//                 foreach (json_decode($product['category_ids'], true) as $category) {
+//                     if ($category['id'] == $request['id']) {
+//                         array_push($product_ids, $product['id']);
+//                     }
+//                 }
+//             }
+//             $query = $porduct_data->whereIn('id', $product_ids);
+//            // dd($product_ids);
+//         }
+
+    
+   
+
+  
+  
+
+      
+
+//         if ($request['data_from'] == 'search') {
+//             $key = explode(' ', $request['name']);
+//             $product_ids = Product::where(function ($q) use ($key) {
+//                 foreach ($key as $value) {
+//                     $q->orWhere('name', 'like', "%{$value}%")
+//                     ->orWhereHas('tags',function($query)use($value){
+//                         $query->where('tag', 'like', "%{$value}%");
+//                     });
+//                 }
+//             })  
+//             ->pluck('id');
+
+//             if($product_ids->count()==0)
+//             {
+//                 $product_ids = Translation::where('translationable_type', 'App\Model\Product')
+//                     ->where('key', 'name')
+//                     ->where(function ($q) use ($key) {
+//                         foreach ($key as $value) {
+//                             $q->orWhere('value', 'like', "%{$value}%");
+//                         }
+//                     })
+//                     ->pluck('translationable_id');
+
+
+//             }
+
+//             $query = $porduct_data->WhereIn('id', $product_ids);
+
+//         }
+
+//         if ($request['data_from'] == 'discounted') {
+//             $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
+//         }
+
+//         if ($request['sort_by'] == 'latest') {
+//             $fetched = $query->latest();
+//         } elseif ($request['sort_by'] == 'low-high') {
+//             $fetched = $query->orderBy('unit_price', 'ASC');
+//         } elseif ($request['sort_by'] == 'high-low') {
+//             $fetched = $query->orderBy('unit_price', 'DESC');
+//         } elseif ($request['sort_by'] == 'a-z') {
+//             $fetched = $query->orderBy('name', 'ASC');
+//         } elseif ($request['sort_by'] == 'z-a') {
+//             $fetched = $query->orderBy('name', 'DESC');
+//         } else {
+//             $fetched = $query->latest();
+//             // $fetched = $query->paginate(12);
+
+//         }
+
+//         if ($request['min_price'] != null || $request['max_price'] != null) {
+//             $fetched = $fetched->whereBetween('unit_price', [Helpers::convert_currency_to_usd($request['min_price']), Helpers::convert_currency_to_usd($request['max_price'])]);
+//         }
+// // return $query;
+//         $data = [
+//             'id' => $request['id'],
+//             'name' => $request['name'],
+//             'data_from' => $request['data_from'],
+//             'sort_by' => $request['sort_by'],
+//             'page_no' => $request['page'],
+//             'min_price' => $request['min_price'],
+//             'max_price' => $request['max_price'],
+//         ];
+// // return $products;
+//         $products = $fetched->paginate(20)->appends($data);
+
+//         if ($request->ajax()) {
+
+//             return response()->json([
+//                 'total_product'=>$products->total(),
+//                 'view' => view('web-views.products._ajax-products', compact('products'))->render()
+//             ], 200);
+//         }  
+        
+
+//         if ($request['data_from'] == 'category') {
+//             $data['brand_name'] = Category::find((int)$request['id'])->name;
+//         }
+//         if ($request['data_from'] == 'brand') {
+//             $brand_data = Brand::active()->find((int)$request['id']);
+//             if($brand_data) {
+//                 $data['brand_name'] = $brand_data->name;
+//             }else {
+//                 Toastr::warning(translate('not_found'));
+//                 return redirect('/');
+//             }
+//         }
+
+
+
+        
+ 
+//                 return view('seller-views.product.adminlist12', compact('products','search', 'data'), $data);
+
+//     }
+
+
+
+
+
+
+
+
+
+    
+
+
 }
+

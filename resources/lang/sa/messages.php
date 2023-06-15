@@ -30,6 +30,9 @@
   'Denied' => 'رفض',
   'marketing_section' => 'قسم التسويق',
   'banners' => 'لافتات',
+  'goverments ' => 'المحافظات',
+  'cities ' => 'المدن',
+
   'coupons' => 'كوبونات',
   'push_notification' => 'دفع إخطارات',
   'flash_deals' => 'الصفقات الفلاش',
@@ -108,7 +111,11 @@
   'Product Name' => 'اسم المنتج',
   'purchase_price' => 'سعر الشراء',
   'selling_price' => 'سعر البيع',
-  'featured' => 'متميز',
+  'best_offers' => 'اقوي العروض',
+
+  'goverments' => 'المحافظات',
+  'cities' => 'المدن',
+
   'Active' => 'نشيط',
   'status' => 'الحالة',
   'name' => 'اسم',
@@ -140,6 +147,11 @@
   'SKU' => 'SKU',
   'Enter choice values' => 'أدخل قيم الاختيار',
   'Banner' => 'لافتة',
+  'register_banner' => 'صوره السجل',
+
+  'goverments' => 'المحافظات',
+  'cities ' => 'المدن',
+
   'add_main_banner' => 'إضافة لافتة رئيسية',
   'add_secondary_banner' => 'إضافة لافتة ثانوية',
   'add_popup_banner' => 'إضافة لافتة منبثقة',
@@ -346,7 +358,11 @@
   'Quick' => 'سريع',
   'recommended_product' => 'أوصى المنتج',
   'buy_now' => 'اشتري الآن',
-  'latest_products' => 'أحدث المنتجات',
+  'best_offers' => 'اقوي العروض',
+
+  'goverments' => 'المحافظات',
+  'cities' => 'المدن',
+
   'sellers' => 'الباعة',
   'bestsellings' => 'الأكثر مبيعًا',
   'new_arrivals' => 'الوافدين الجدد',
@@ -770,6 +786,10 @@
   'repeat_password' => 'اعد كلمة السر',
   'shop_name' => 'اسم المحل',
   'shop_address' => 'عنوان المتجر',
+  'choose_goverment' => 'اختر المحافظه',
+  'In_side' => 'بداخل النطاق',
+  'Out_side' => 'بخارج النطاق',
+
   'already_have_an_account _login.' => 'هل لديك حساب؟ سجل في.',
   'order_list' => 'لائحة الطلبات',
   'inhouse_orders_only' => 'الطلبات  الداخلية فقط',
@@ -2027,7 +2047,9 @@
   'Limited Sotcks' => 'مخزون محدود',
   'Add_New_Product' => 'إضافة منتج جديد',
   'Product Type' => 'نوع المنتج',
-  'Show_as_featured' => 'تظهر كما هو موضح',
+  'best_offers' => 'اقوي العروض',
+'goverments' => 'المحافظات',
+  'cities' => 'المدن',
   'barcode' => 'الرمز الشريطي',
   'product_type' => 'نوع المنتج',
   'physical' => 'بدني',
@@ -2055,6 +2077,8 @@
   'Limited_Stocked_Products_List' => 'قائمة المنتجات المخزنة محدودة',
   'Product_Name' => 'اسم المنتج',
   'banner' => 'لافتة',
+  'goverment ' => 'المحافظات',
+
   'banner_URL' => 'URL لافتة',
   'Main Banner' => 'لافتة رئيسية',
   'Footer Banner' => 'بانر التذييل',

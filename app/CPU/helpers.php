@@ -7,6 +7,9 @@ use App\Model\BusinessSetting;
 use App\Model\Category;
 use App\Model\Color;
 use App\Model\Coupon;
+
+use App\Model\Product;
+
 use App\Model\Currency;
 use App\Model\Order;
 use App\Model\Review;
@@ -20,6 +23,15 @@ use Illuminate\Support\Facades\Session;
 
 class Helpers
 {
+
+
+
+
+
+    
+
+
+
     public static function status($id)
     {
         if ($id == 1) {
@@ -703,6 +715,11 @@ class Helpers
         }
         return $string;
     }
+
+
+
+
+
 
     public static function pagination_limit()
     {

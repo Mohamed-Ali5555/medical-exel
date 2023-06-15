@@ -35,13 +35,17 @@
                     </div>
                 </div>
                 <div class="col-6 col-md-5 col-12">
-                    <h1>{{ $product->name }}</h1>
+                    <h2>{{ $product->name }}</h2>
+                                 
+                             @if($product->brand !=null)
+                                <p class="mb-2 __inline-24">{{ $product->brand->name }}</p>
+                                  @endif
                     <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                         src="{{ asset("storage/app/public/product/thumbnail/$product->thumbnail") }}" alt="Product thumb">
                 </div>
             </div>
 
-            @foreach ($sellers_products as $product)
+            @foreach ($sellers_products  as $key =>  $product0)
 
                 {{-- @foreach ($product->children ) --}}
 
@@ -49,32 +53,51 @@
                         <div class="col-3"></div>
                         <div class="col-6">
                             <div class="details __h-100">
-                                <span class="mb-2 __inline-24">{{ $product->seller->shop->name }}</span>
+                                <span class="mb-2 __inline-24">{{ $product0->seller->shop->name }}</span>
 
-                                <div class="mb-3">
-                                {{$product->discount}} 
-                                    @if ($product->discount > 0)
+                                <div class="mb-3 mt-1 d-flex">
+
+                   @if ($product0->discount === $sellers_products->max('discount'))
+                        <div class="" style="background-color: #3c6; border-radius: 4px; padding: 5px;">
+                    @else
+                        <div class="" style="background-color: #1d46ed; border-radius: 4px; padding: 5px;">
+                    @endif
+                                    <span class="for-discoutn-value1 p-1 pl-2 pr-2 pt-1 ">
+                                        @if ($product0->discount_type == 'percent')
+                                            {{ round($product0->discount, !empty($decimal_point_settings) ? $decimal_point_settings : 0) }}%
+                                        @elseif($product0->discount_type == 'flat')
+                                            {{ \App\CPU\Helpers::currency_converter($product0->discount) }}
+                                        @endif
+                                        {{ \App\CPU\translate('off') }}
+                                    </span>
+                             </div>
+
+
+
+
+
+                                {{-- {{$product->discount}}  --}}
+                                    @if ($product0->discount > 0)
                                         <strike style="color: #E96A6A;"
                                             class="{{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-3' }}">
-                                            {{ \App\CPU\Helpers::currency_converter($product->unit_price) }}
+                                            {{ \App\CPU\Helpers::currency_converter($product0->unit_price) }}
                                         </strike>
                                     @endif
                                     <span class="h3 font-weight-normal text-accent ">
-                                        {{ \App\CPU\Helpers::get_price_range($product) }}
+                                        {{ \App\CPU\Helpers::get_price_range($product0) }}
                                     </span>
                                     <span
                                         class="{{ Session::get('direction') === 'rtl' ? 'mr-2' : 'ml-2' }} __text-12px font-regular">
-                                        (<span>{{ \App\CPU\translate('tax') }} : </span>
-                                        <span id="set-tax-amount"></span>)
+                             
                                     </span>
                                 </div>
 
                                 <form id="add-to-cart-form" class="mb-2">
                                     @csrf
-                                    <input type="hidden" name="id" value="{{ $product->id }}">
+                                    <input type="hidden" name="id" value="{{ $product0->id }}">
                                     <div
                                         class="position-relative {{ Session::get('direction') === 'rtl' ? 'ml-n4' : 'mr-n4' }} mb-2">
-                                        @if (count(json_decode($product->colors)) > 0)
+                                        @if (count(json_decode($product0->colors)) > 0)
                                             <div class="flex-start">
                                                 <div class="product-description-label mt-2 text-body">
                                                     {{ \App\CPU\translate('color') }}:
@@ -82,15 +105,15 @@
                                                 <div>
                                                     <ul class="list-inline checkbox-color mb-1 flex-start {{ Session::get('direction') === 'rtl' ? 'mr-2' : 'ml-2' }}"
                                                         style="padding-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }}: 0;">
-                                                        @foreach (json_decode($product->colors) as $key => $color)
+                                                        @foreach (json_decode($product0->colors) as $key => $color)
                                                             <div>
                                                                 <li>
                                                                     <input type="radio"
-                                                                        id="{{ $product->id }}-color-{{ str_replace('#', '', $color) }}"
+                                                                        id="{{ $product0->id }}-color-{{ str_replace('#', '', $color) }}"
                                                                         name="color" value="{{ $color }}"
                                                                         @if ($key == 0) checked @endif>
                                                                     <label style="background: {{ $color }};"
-                                                                        for="{{ $product->id }}-color-{{ str_replace('#', '', $color) }}"
+                                                                        for="{{ $product0->id }}-color-{{ str_replace('#', '', $color) }}"
                                                                         data-toggle="tooltip"
                                                                         onclick="focus_preview_image_by_color('{{ str_replace('#', '', $color) }}')">
                                                                         <span class="outline"></span></label>
@@ -103,14 +126,14 @@
                                         @endif
                                         @php
                                             $qty = 0;
-                                            if (!empty($product->variation)) {
-                                                foreach (json_decode($product->variation) as $key => $variation) {
+                                            if (!empty($product0->variation)) {
+                                                foreach (json_decode($product0->variation) as $key => $variation) {
                                                     $qty += $variation->qty;
                                                 }
                                             }
                                         @endphp
                                     </div>
-                                    @foreach (json_decode($product->choice_options) as $key => $choice)
+                                    @foreach (json_decode($product0->choice_options) as $key => $choice)
                                         <div class="row flex-start mx-0">
                                             <div
                                                 class="product-description-label text-body mt-2 {{ Session::get('direction') === 'rtl' ? 'pl-2' : 'pr-2' }}">
@@ -136,7 +159,7 @@
                                             </div>
                                         </div>
                                     @endforeach
-
+{{-- dd({{ $product0->id}}); --}}
                                     <!-- Quantity + Add to cart -->
                                     <div class="mt-2">
                                         <div class="product-quantity d-flex flex-wrap align-items-center __gap-15">
@@ -147,19 +170,21 @@
                                                     style="color: {{ $web_config['primary_color'] }}">
                                                     <span class="input-group-btn">
                                                         <button class="btn btn-number __p-10" type="button"
-                                                            data-type="minus" data-field="quantity" disabled="disabled"
+                                                            data-type="minus" data-field="quantity" disabled="disabled" data-id="{{ $product0->id }}"
                                                             style="color: {{ $web_config['primary_color'] }}">
                                                             -
                                                         </button>
                                                     </span>
                                                     <input type="text" name="quantity"
                                                         class="form-control input-number text-center cart-qty-field __inline-29"
-                                                        placeholder="1" value="{{ $product->minimum_order_qty ?? 1 }}"
-                                                        product-type="{{ $product->product_type }}"
-                                                        min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
+                                                        placeholder="1" value="{{ $product0->minimum_order_qty ?? 1 }}"
+                                                        product-type="{{ $product0->product_type }}"
+                                                        min="{{ $product0->minimum_order_qty ?? 1 }}" max="100"  id="{{ $product0->id }}" >
+                                                
+                                                
                                                     <span class="input-group-btn">
                                                         <button class="btn btn-number __p-10" type="button"
-                                                            product-type="{{ $product->product_type }}" data-type="plus"
+                                                            product-type="{{ $product0->product_type }}" data-type="plus" data-id="{{ $product0->id }}"
                                                             data-field="quantity"
                                                             style="color: {{ $web_config['primary_color'] }}">
                                                             +
@@ -171,12 +196,46 @@
                                                 <div
                                                     class="d-flex justify-content-center align-items-center {{ Session::get('direction') === 'rtl' ? 'ml-2' : 'mr-2' }}">
                                                     <div class="product-description-label">
-                                                        <strong>{{ \App\CPU\translate('total_price') }}</strong> : </div>
+                                                      
+                                                      
+                                                        <strong>
+                                                        
+
+                                                        {{ \App\CPU\translate('total_price') }}</strong> : 
+                                                        
+                                                        
+                                                        </div>
+
+                                                    {{-- {{ \App\CPU\Helpers::get_price_range($product) }} --}}
+                                              {{-- <strong id="chosen_price">$29.99</strong> --}}
+
                                                     &nbsp; <strong id="chosen_price"></strong>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     <div class="row no-gutters d-none mt-2 flex-start d-flex">
                                         <div class="col-12">
                                             @if ($product['product_type'] == 'physical' && $product['current_stock'] <= 0)
@@ -235,6 +294,12 @@
                     
                 {{-- @endforeach --}}
             @endforeach
+
+
+
+
+
+
         </div>
         <div class="modal fade rtl" id="show-modal-view" tabindex="-1" role="dialog"
             aria-labelledby="show-modal-image" aria-hidden="true"

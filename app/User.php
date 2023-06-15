@@ -3,6 +3,8 @@
 namespace App;
 
 use App\Model\Order;
+use App\Model\job;
+
 use App\Model\ShippingAddress;
 use App\Model\Wishlist;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +21,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'f_name', 'l_name', 'name', 'email', 'password', 'phone', 'image', 'login_medium','is_active','social_id','is_phone_verified','temporary_token'
+        'f_name', 'l_name', 'name', 'email', 'password', 'phone','address',
+         'image','jobAs_id'. 'login_medium','is_active','social_id','is_phone_verified',
+         'temporary_token'
     ];
 
     /**
@@ -63,6 +67,12 @@ class User extends Authenticatable
     public function shipping()
     {
         return $this->belongsTo(ShippingAddress::class, 'shipping_address');
+    }
+
+    
+    public function job(){
+        return $this->belongsTo(job::Class,'job_id','id');
+
     }
 
 }

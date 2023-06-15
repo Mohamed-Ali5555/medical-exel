@@ -133,6 +133,47 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('export', 'BrandController@export')->name('export');
             Route::post('status-update', 'BrandController@status_update')->name('status-update');
         });
+        // /////////////////////////////////////
+        Route::group(['prefix' => 'goverment', 'as' => 'goverment.','middleware'=>['module:product_management']], function () {
+            Route::post('add-new', 'GovermentController@store')->name('store');
+            Route::get('list', 'GovermentController@list')->name('list');
+            Route::post('delete', 'GovermentController@delete')->name('delete');
+            Route::post('status', 'GovermentController@status')->name('status');
+            Route::get('edit/{id}', 'GovermentController@edit')->name('edit');
+            Route::put('update/{id}', 'GovermentController@update')->name('update');
+
+            Route::post('status-update', 'GovermentController@status_update')->name('status');
+        });
+        // /////////////////////////////////////
+         // ///////////////// start city ///////////////////
+         Route::group(['prefix' => 'city', 'as' => 'city.','middleware'=>['module:product_management']], function () {
+            Route::post('add-new', 'CityController@store')->name('store');
+            Route::get('list', 'CityController@list')->name('list');
+            Route::post('delete', 'CityController@delete')->name('delete');
+            Route::post('status', 'CityController@status')->name('status');
+            Route::get('edit/{id}', 'CityController@edit')->name('edit');
+            Route::put('update/{id}', 'CityController@update')->name('update');
+
+            Route::post('status-update', 'CityController@status_update')->name('status');
+        });
+        // ///////////////// end city////////////////////
+
+           // ///////////////// start job ///////////////////
+           Route::group(['prefix' => 'job', 'as' => 'job.','middleware'=>['module:product_management']], function () {
+            Route::post('add-new', 'JobController@store')->name('store');
+            Route::get('list', 'JobController@list')->name('list');
+            Route::post('delete', 'JobController@delete')->name('delete');
+            Route::post('status', 'JobController@status')->name('status');
+            Route::get('edit/{id}', 'JobController@edit')->name('edit');
+            Route::put('update/{id}', 'JobController@update')->name('update');
+
+            Route::post('status-update', 'JobController@status_update')->name('status');
+        });
+        // ///////////////// end job////////////////////
+
+
+
+
 
         Route::group(['prefix' => 'banner', 'as' => 'banner.','middleware'=>['module:promotion_management']], function () {
             Route::post('add-new', 'BannerController@store')->name('store');
@@ -401,6 +442,14 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('remove-key/{lang}', 'LanguageController@translate_key_remove')->name('remove-key');
                 Route::get('delete/{lang}', 'LanguageController@delete')->name('delete');
                 Route::any('auto-translate/{lang}', 'LanguageController@auto_translate')->name('auto-translate');
+            
+            
+
+                // Route::get('/translate/{lang}', [TranslateController::class, 'translate'])->name('translate');
+
+            
+            
+            
             });
 
             Route::group(['prefix' => 'mail', 'as' => 'mail.','middleware'=>['module:system_settings']], function () {
@@ -645,3 +694,5 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
     /*Route::get('login', 'testController@login')->name('login');*/
 });
+Route::get('translate/{lang}', [\App\Http\Controllers\Admin\LanguageController::class,'translate'])->name('translate');
+// Route::get('product-category/{slug}/',[\App\Http\Controllers\Admin\LanguageController::class,'translate'])->name('product.category');

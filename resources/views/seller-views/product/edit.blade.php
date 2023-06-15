@@ -269,14 +269,14 @@
                                                name="unit_price" class="form-control"
                                                value={{\App\CPU\BackEndHelper::usd_to_currency($product->unit_price)}} required>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label
                                             class="title-color">{{\App\CPU\translate('Purchase_price')}}</label>
                                         <input type="number" min="0" step="0.01"
                                                placeholder="{{\App\CPU\translate('Purchase price') }}"
                                                name="purchase_price" class="form-control"
                                                value={{ \App\CPU\BackEndHelper::usd_to_currency($product->purchase_price) }} required>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-4 mb-3">
                                         <label class="title-color">{{\App\CPU\translate('Tax')}}</label>
                                         <label class="badge badge-soft-info">{{\App\CPU\translate('Percent')}} ( % )</label>
@@ -292,14 +292,14 @@
                                             <option value="exclude" {{ $product->tax_model == 'exclude' ? 'selected':'' }}>{{ \App\CPU\translate("exclude") }}</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label class="title-color">{{\App\CPU\translate('Discount')}}</label>
                                         <input type="number" min="0"
                                                value={{ $product->discount_type=='flat'?\App\CPU\BackEndHelper::usd_to_currency($product->discount): $product->discount}} step="0.01"
                                                placeholder="{{\App\CPU\translate('Discount') }}" name="discount"
                                                class="form-control" required>
                                     </div>
-                                    <div class="col-md-2 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label for="" class="title-color">{{\App\CPU\translate('Discount_Type')}}</label>
                                         <select
                                             class="form-control js-select2-custom"
